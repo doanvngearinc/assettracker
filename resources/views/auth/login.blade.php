@@ -71,6 +71,7 @@
                             </div>
                             @endif
                         </div>
+                        {{-- Neeeee --}}
                         <div class="box-footer">
                             @if (config('app.require_saml'))
                                 <a class="btn btn-primary btn-block" href="{{ route('saml.login')  }}">{{ trans('auth/general.saml_login')  }}</a>
