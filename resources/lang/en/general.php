@@ -177,6 +177,7 @@ return [
     'feature_disabled'      => 'This feature has been disabled for the demo installation.',
     'location'              => 'Location',
     'locations'				=> 'Locations',
+    'location_company'      => '9TH Floor, VTC Online Building, No. 18 Tam Trinh, Minh Khai Ward, Hai Ba Trung District, Hanoi',
     'logo_size'				=> 'Square logos look best with Logo + Text. Logo maximum display size is 50px high x 500px wide.  ',
     'logout'				=> 'Logout',
     'lookup_by_tag'     => 'Lookup by Asset Tag',
