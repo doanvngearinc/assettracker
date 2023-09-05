@@ -973,7 +973,7 @@ class AssetsController extends Controller
     {
         $this->authorize('audit', Asset::class);
         $rules = [
-            'asset_tag' => 'required',
+            'serial' => 'required',
             'location_id' => 'exists:locations,id|nullable|numeric',
             'next_audit_date' => 'date|nullable',
         ];
@@ -986,7 +986,7 @@ class AssetsController extends Controller
         $settings = Setting::getSettings();
         $dt = Carbon::now()->addMonths($settings->audit_interval)->toDateString();
 
-        $asset = Asset::where('asset_tag', '=', $request->input('asset_tag'))->first();
+        $asset = Asset::where('serial', '=', $request->input('serial'))->first();
 
 
         if ($asset) {
@@ -1010,14 +1010,14 @@ class AssetsController extends Controller
                 $log = $asset->logAudit(request('note'), request('location_id'));
 
                 return response()->json(Helper::formatStandardApiResponse('success', [
-                    'asset_tag'=> e($asset->asset_tag),
+                    'serial'=> e($asset->serial),
                     'note'=> e($request->input('note')),
                     'next_audit_date' => Helper::getFormattedDateObject($asset->next_audit_date),
                 ], trans('admin/hardware/message.audit.success')));
             }
         }
 
-        return response()->json(Helper::formatStandardApiResponse('error', ['asset_tag'=> e($request->input('asset_tag'))], 'Asset with tag '.e($request->input('asset_tag')).' not found'));
+        return response()->json(Helper::formatStandardApiResponse('error', ['serial'=> e($request->input('serial'))], 'Serial'.e($request->input('serial')).' not found'));
     }
 
 

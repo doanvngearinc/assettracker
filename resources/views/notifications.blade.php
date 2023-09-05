@@ -49,7 +49,7 @@
                     @isset ($asset->name)
                         <li><b>{{ trans('general.asset_name') }} </b> {{ $asset->model->name }}</li>
                     @endisset
-                    <li><b>{{ trans('general.asset_tag') }}</b> {{ $asset->asset_tag }}</li>
+                    <li><b>{{ trans('general.serial_number') }}</b> {{ $asset->serial }}</li>
 		    @isset ($asset->notes)
 		    <li><b>{{ trans('general.notes') }}</b> {{ $asset->notes }}</li>
 		    @endisset
