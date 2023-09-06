@@ -37,6 +37,32 @@
             font-style: oblique;
             font-weight: lighter;
         }
+
+        .head_content {
+            margin-top: 30px;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        .respons_header {
+            font-weight: 700;
+        }
+
+        .respons_txt {
+            text-align: left;
+            font-weight: 300;
+        }
+
+        .respons_txt_2 {
+            text-align: left;
+            padding-top: 23px;
+            font-weight: 300;
+        }
+
+        .signature {
+            display: flex;
+            justify-content: space-around;
+        }
     </style>
 </head>
 
@@ -52,6 +78,9 @@
         {{ $snipeSettings->site_name }}
         <p class="text_Location">{{ trans('general.location_company') }}</p>
     </h2>
+    <h2 class="head_content">
+        {{ trans('general.head_content') }}
+    </h2>
     @elseif ($snipeSettings->brand == '2')
     @if ($snipeSettings->logo!='')
     <img class="print-logo" src="{{ config('app.url') }}/uploads/{{ $snipeSettings->logo }}">
@@ -61,9 +90,30 @@
     @endif
     @endif
 
-    <h3>{{ trans('general.assigned_to', ['name' => $show_user->present()->fullName()]) }} {{ ($show_user->jobtitle!='' ?
+    <h2>{{ trans('general.general_info') }}</h2>
+    {{-- <h3>{{ trans('general.assigned_to', ['name' => $show_user->present()->fullName()]) }} {{
+        ($show_user->jobtitle!='' ?
         ' - '.$show_user->jobtitle : '') }}
+    </h3> --}}
+    <h3>{{ trans('general.taken') }} {{ $show_user->first_name }} {{ $show_user->last_name }}
     </h3>
+    <thead>
+        <tr>
+            <th scope="row">Job detail: </th>
+            <th scope=""> {{ $show_user->jobtitle }}</th>
+        </tr>
+    </thead>
+    <br>
+    <tbody>
+        <tr>
+            <th scope="col"> {{ trans('general.department') }}:</th>
+            <th scope="col"> {{ $show_user->department->name }} </th>
+        </tr>
+    </tbody>
+
+    <br>
+    <br>
+
     @if ($assets->count() > 0)
     @php
     $counter = 1;
@@ -258,22 +308,36 @@
         @endforeach
     </table>
     @endif
-
     <br>
     <br>
+    <table>
+        <thead>
+            <tr>
+                <th class="respons_header"> {{ trans('general.purpose') }} </th>
+                <th class="respons_txt"> {{ trans('general.purpose_txt')}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th class="respons_header" scope="col">
+                    {{ trans('general.respons') }}
+                </th>
+                <th scope="col" class="respons_txt_2"> {{ trans('general.responsibility') }}</th>
+            </tr>
+        </tbody>
+    </table>
+    <br>
+    <p class="respons_txt_2">{{ trans('general.responsibility_2') }}</p>
     {{ trans('admin/users/general.all_assigned_list_generation')}} {{ Helper::getFormattedDateObject(now(), 'datetime',
     false) }}
     <br>
     <br>
-    <table>
-        <tr>
-            <td>{{ trans('general.signed_off_by') }}:</td>
-            <td>________________________________________________________</td>
-            <td></td>
-            <td>{{ trans('general.date') }}:</td>
-            <td>________________________________________________________</td>
-        </tr>
-    </table>
+
+    <p>{{ trans('general.date') }}:</p>
+    <div class="signature">
+        <p>{{ trans('general.signed_off_by') }}</p>
+        <p>{{ trans('general.signed_off_recipient') }}</p>
+    </div>
 
 
 </body>

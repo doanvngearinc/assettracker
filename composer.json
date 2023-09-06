@@ -71,7 +71,8 @@
     "symfony/polyfill-mbstring": "^1.22",
     "tecnickcom/tc-lib-barcode": "^1.15",
     "unicodeveloper/laravel-password": "^1.0",
-    "watson/validating": "^6.1"
+    "watson/validating": "^6.1",
+    "yajra/laravel-datatables": "^1.5"
   },
   "require-dev": {
     "brianium/paratest": "^6.6",

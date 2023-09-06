@@ -9,6 +9,7 @@ use App\Http\Requests\ImageUploadRequest;
 use App\Http\Requests\SaveUserRequest;
 use App\Models\Asset;
 use App\Models\Company;
+use App\Models\Department;
 use App\Models\Group;
 use App\Models\Ldap;
 use App\Models\Setting;
@@ -613,6 +614,9 @@ class UsersController extends Controller
         $assets = Asset::where('assigned_to', $id)->where('assigned_type', User::class)->with('model', 'model.category')->get();
         $accessories = $show_user->accessories()->get();
         $consumables = $show_user->consumables()->get();
+
+
+        // dd($show_user->department->name);
 
         return view('users/print')->with('assets', $assets)
             ->with('licenses', $show_user->licenses()->get())
