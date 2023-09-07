@@ -5,6 +5,9 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>{{ trans('general.assigned_to', ['name' => $show_user->present()->fullName()]) }} - {{ date('Y-m-d H:i',
         time()) }}</title>
+
+    <!-- DataTable -->
+    <link rel="stylesheet" href="//cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <style>
         body {
             font-family: "Arial, Helvetica", sans-serif;
@@ -110,118 +113,119 @@
             <th scope="col"> {{ $show_user->department->name }} </th>
         </tr>
     </tbody>
-
     <br>
     <br>
-
     @if ($assets->count() > 0)
     @php
     $counter = 1;
     @endphp
-    <table class="inventory">
-        <thead>
-            <tr>
-                <th colspan="8">{{ trans('general.assets') }}</th>
-            </tr>
-        </thead>
-        <thead>
-            <tr>
-                <th style="width: 20px;"></th>
-                <th style="width: 20%;">{{ trans('admin/hardware/table.asset_tag') }}</th>
-                <th style="width: 20%;">{{ trans('general.name') }}</th>
-                <th style="width: 10%;">{{ trans('general.category') }}</th>
-                <th style="width: 20%;">{{ trans('admin/hardware/form.model') }}</th>
-                <th style="width: 20%;">{{ trans('admin/hardware/form.serial') }}</th>
-                <th style="width: 10%;">{{ trans('admin/hardware/table.checkout_date') }}</th>
-                <th data-formatter="imageFormatter" style="width: 20%;">{{ trans('general.signature') }}</th>
-            </tr>
-        </thead>
 
-        @foreach ($assets as $asset)
+    <div class="container table-responsive">
+        <table id="myTable" class="inventory">
+            {{-- <thead>
+                <tr>
+                    <th colspan="8">{{ trans('general.assets') }}</th>
+                </tr>
+            </thead> --}}
+            <thead>
+                <tr>
+                    <th style="width: 20px;"></th>
+                    <th style="width: 20%;">{{ trans('admin/hardware/table.asset_tag') }}</th>
+                    <th style="width: 20%;">{{ trans('general.name') }}</th>
+                    <th style="width: 10%;">{{ trans('general.category') }}</th>
+                    <th style="width: 20%;">{{ trans('admin/hardware/form.model') }}</th>
+                    <th style="width: 20%;">{{ trans('admin/hardware/form.serial') }}</th>
+                    <th style="width: 10%;">{{ trans('admin/hardware/table.checkout_date') }}</th>
+                    <th data-formatter="imageFormatter" style="width: 20%;">{{ trans('general.signature') }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($assets as $asset)
 
-        <tr>
-            <td>{{ $counter }}</td>
-            <td>{{ $asset->asset_tag }}</td>
-            <td>{{ $asset->name }}</td>
-            <td>{{ $asset->model->category->name }}</td>
-            <td>{{ $asset->model->name }}</td>
-            <td>{{ $asset->serial }}</td>
-            <td>
-                {{ $asset->last_checkout }}</td>
-            <td>
-                @if (($asset->assetlog->first()) && ($asset->assetlog->first()->accept_signature!=''))
-                <img style="width:auto;height:100px;"
-                    src="{{ asset('/') }}display-sig/{{ $asset->assetlog->first()->accept_signature }}">
+                <tr>
+                    <td>{{ $counter }}</td>
+                    <td>{{ $asset->asset_tag }}</td>
+                    <td>{{ $asset->name }}</td>
+                    <td>{{ $asset->model->category->name }}</td>
+                    <td>{{ $asset->model->name }}</td>
+                    <td>{{ $asset->serial }}</td>
+                    <td>
+                        {{ $asset->last_checkout }}</td>
+                    <td>
+                        @if (($asset->assetlog->first()) && ($asset->assetlog->first()->accept_signature!=''))
+                        <img style="width:auto;height:100px;"
+                            src="{{ asset('/') }}display-sig/{{ $asset->assetlog->first()->accept_signature }}">
+                        @endif
+                    </td>
+                </tr>
+                @if($settings->show_assigned_assets)
+                @php
+                $assignedCounter = 1;
+                @endphp
+                @foreach ($asset->assignedAssets as $asset)
+
+                <tr>
+                    <td>{{ $counter }}.{{ $assignedCounter }}</td>
+                    <td>{{ $asset->asset_tag }}</td>
+                    <td>{{ $asset->name }}</td>
+                    <td>{{ $asset->model->category->name }}</td>
+                    <td>{{ $asset->model->name }}</td>
+                    <td>{{ $asset->serial }}</td>
+                    <td>{{ $asset->last_checkout }}</td>
+                    <td><img style="width:auto;height:100px;"
+                            src="{{ asset('/') }}display-sig/{{ $asset->assetlog->first()->accept_signature }}"></td>
+                </tr>
+                @php
+                $assignedCounter++
+                @endphp
+                @endforeach
                 @endif
-            </td>
-        </tr>
-        @if($settings->show_assigned_assets)
-        @php
-        $assignedCounter = 1;
-        @endphp
-        @foreach ($asset->assignedAssets as $asset)
-
-        <tr>
-            <td>{{ $counter }}.{{ $assignedCounter }}</td>
-            <td>{{ $asset->asset_tag }}</td>
-            <td>{{ $asset->name }}</td>
-            <td>{{ $asset->model->category->name }}</td>
-            <td>{{ $asset->model->name }}</td>
-            <td>{{ $asset->serial }}</td>
-            <td>{{ $asset->last_checkout }}</td>
-            <td><img style="width:auto;height:100px;"
-                    src="{{ asset('/') }}display-sig/{{ $asset->assetlog->first()->accept_signature }}"></td>
-        </tr>
-        @php
-        $assignedCounter++
-        @endphp
-        @endforeach
-        @endif
-        @php
-        $counter++
-        @endphp
-        @endforeach
-    </table>
+                @php
+                $counter++
+                @endphp
+                @endforeach
+            </tbody>
+        </table>
+    </div>
     @endif
 
     @if ($licenses->count() > 0)
-    <br><br>
     <table class="inventory">
         <thead>
             <tr>
                 <th colspan="4">{{ trans('general.licenses') }}</th>
             </tr>
         </thead>
-        <thead>
+        <tbody>
             <tr>
                 <th style="width: 20px;"></th>
                 <th style="width: 40%;">{{ trans('general.name') }}</th>
                 <th style="width: 50%;">{{ trans('admin/licenses/form.license_key') }}</th>
                 <th style="width: 10%;">{{ trans('admin/hardware/table.checkout_date') }}</th>
             </tr>
-        </thead>
-        @php
-        $lcounter = 1;
-        @endphp
+            @php
+            $lcounter = 1;
+            @endphp
 
-        @foreach ($licenses as $license)
+            @foreach ($licenses as $license)
 
-        <tr>
-            <td>{{ $lcounter }}</td>
-            <td>{{ $license->name }}</td>
-            <td>
-                @can('viewKeys', $license)
-                {{ $license->serial }}
-                @else
-                <i class="fa-lock" aria-hidden="true"></i> {{ str_repeat('x', 15) }}
-                @endcan
-            </td>
-            <td>{{ $license->pivot->created_at }}</td>
-        </tr>
-        @php
-        $lcounter++
-        @endphp
-        @endforeach
+            <tr>
+                <td>{{ $lcounter }}</td>
+                <td>{{ $license->name }}</td>
+                <td>
+                    @can('viewKeys', $license)
+                    {{ $license->serial }}
+                    @else
+                    <i class="fa-lock" aria-hidden="true"></i> {{ str_repeat('x', 15) }}
+                    @endcan
+                </td>
+                <td>{{ $license->pivot->created_at }}</td>
+            </tr>
+            @php
+            $lcounter++
+            @endphp
+            @endforeach
+        </tbody>
     </table>
     @endif
 
@@ -338,8 +342,11 @@
         <p>{{ trans('general.signed_off_by') }}</p>
         <p>{{ trans('general.signed_off_recipient') }}</p>
     </div>
-
-
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="//cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script>
+        let table = new DataTable('#myTable');
+    </script>
 </body>
-
 </html>
