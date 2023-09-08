@@ -25,6 +25,7 @@ use Str;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use View;
 use App\Notifications\CurrentInventory;
+use PDF;
 
 /**
  * This controller handles all actions related to Users for

@@ -66,10 +66,21 @@
             display: flex;
             justify-content: space-around;
         }
+
+        @media print {
+
+            .printB,
+            .dataTables_length,
+            .dataTables_filter,
+            .dataTables_info,
+            .dataTables_paginate {
+                display: none;
+            }
+        }
     </style>
 </head>
 
-<body>
+<body id="printableArea">
 
     @if ($snipeSettings->logo_print_assets=='1')
     @if ($snipeSettings->brand == '3')
@@ -92,6 +103,8 @@
     <h2>{{ $snipeSettings->site_name }}</h2>
     @endif
     @endif
+
+    <a class="printB" href="javascript:void(0);" onclick="printPageArea('printableArea')">Print</a>
 
     <h2>{{ trans('general.general_info') }}</h2>
     {{-- <h3>{{ trans('general.assigned_to', ['name' => $show_user->present()->fullName()]) }} {{
@@ -348,5 +361,18 @@
     <script>
         let table = new DataTable('#myTable');
     </script>
+    <script>
+        function printPageArea(areaID){
+            var printContent = document.getElementById(areaID).innerHTML;
+            var originalContent = document.body.innerHTML;
+            document.body.innerHTML = printContent;
+            window.print();
+            document.body.innerHTML = originalContent;
+        }
+        window.onafterprint = function() {
+        window.location.reload(true);
+    };
+    </script>
 </body>
+
 </html>

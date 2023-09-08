@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use enshrined\svgSanitize\Sanitizer;
 use Illuminate\Support\Facades\Storage;
+use PDF;
 
 class UserFilesController extends Controller
 {
@@ -28,7 +29,7 @@ class UserFilesController extends Controller
     public function store(AssetFileRequest $request, $userId = null)
     {
         $user = User::find($userId);
-        $destinationPath = config('app.private_uploads').'/users';
+        $destinationPath = config('app.private_uploads') . '/users';
 
         if (isset($user->id)) {
             $this->authorize('update', $user);
@@ -40,30 +41,29 @@ class UserFilesController extends Controller
                 return redirect()->back()->with('error', trans('admin/users/message.upload.nofiles'));
             }
             foreach ($files as $file) {
-                
+
                 $extension = $file->getClientOriginalExtension();
-                $file_name = 'user-'.$user->id.'-'.str_random(8).'-'.str_slug(basename($file->getClientOriginalName(), '.'.$extension)).'.'.$extension;
+                $file_name = 'user-' . $user->id . '-' . str_random(8) . '-' . str_slug(basename($file->getClientOriginalName(), '.' . $extension)) . '.' . $extension;
 
 
-                    // Check for SVG and sanitize it
-                    if ($extension == 'svg') {
-                        \Log::debug('This is an SVG');
-                        \Log::debug($file_name);
+                // Check for SVG and sanitize it
+                if ($extension == 'svg') {
+                    \Log::debug('This is an SVG');
+                    \Log::debug($file_name);
 
-                            $sanitizer = new Sanitizer();
+                    $sanitizer = new Sanitizer();
 
-                            $dirtySVG = file_get_contents($file->getRealPath());
-                            $cleanSVG = $sanitizer->sanitize($dirtySVG);
+                    $dirtySVG = file_get_contents($file->getRealPath());
+                    $cleanSVG = $sanitizer->sanitize($dirtySVG);
 
-                            try {
-                                Storage::put('private_uploads/users/'.$file_name, $cleanSVG);
-                            } catch (\Exception $e) {
-                                \Log::debug('Upload no workie :( ');
-                                \Log::debug($e);
-                            }
-
-                    } else {
-                        Storage::put('private_uploads/users/'.$file_name, file_get_contents($file));
+                    try {
+                        Storage::put('private_uploads/users/' . $file_name, $cleanSVG);
+                    } catch (\Exception $e) {
+                        \Log::debug('Upload no workie :( ');
+                        \Log::debug($e);
+                    }
+                } else {
+                    Storage::put('private_uploads/users/' . $file_name, file_get_contents($file));
                 }
 
                 //Log the uploaded file to the log
@@ -77,8 +77,8 @@ class UserFilesController extends Controller
                 $logAction->filename = $file_name;
                 $logAction->action_type = 'uploaded';
 
-                if (! $logAction->save()) {
-                    return JsonResponse::create(['error' => 'Failed validation: '.print_r($logAction->getErrors(), true)], 500);
+                if (!$logAction->save()) {
+                    return JsonResponse::create(['error' => 'Failed validation: ' . print_r($logAction->getErrors(), true)], 500);
                 }
                 $logActions[] = $logAction;
             }
@@ -86,8 +86,6 @@ class UserFilesController extends Controller
             return redirect()->back()->with('success', trans('admin/users/message.upload.success'));
         }
         return redirect()->back()->with('error', trans('admin/users/message.upload.nofiles'));
-
-
     }
 
     /**
@@ -103,14 +101,14 @@ class UserFilesController extends Controller
     public function destroy($userId = null, $fileId = null)
     {
         $user = User::find($userId);
-        $destinationPath = config('app.private_uploads').'/users';
+        $destinationPath = config('app.private_uploads') . '/users';
 
         if (isset($user->id)) {
             $this->authorize('update', $user);
             $log = Actionlog::find($fileId);
-            $full_filename = $destinationPath.'/'.$log->filename;
+            $full_filename = $destinationPath . '/' . $log->filename;
             if (file_exists($full_filename)) {
-                unlink($destinationPath.'/'.$log->filename);
+                unlink($destinationPath . '/' . $log->filename);
             }
             $log->delete();
 
@@ -120,7 +118,6 @@ class UserFilesController extends Controller
         $error = trans('admin/users/message.user_not_found', ['id' => $userId]);
         // Redirect to the licence management page
         return redirect()->route('users.index')->with('error', $error);
-
     }
 
     /**
@@ -152,5 +149,4 @@ class UserFilesController extends Controller
         // Redirect to the licence management page
         return redirect()->route('users.index')->with('error', $error);
     }
-
 }
