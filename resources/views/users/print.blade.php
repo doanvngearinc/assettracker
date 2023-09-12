@@ -104,7 +104,7 @@
     @endif
     @endif
 
-    <a class="printB" href="javascript:void(0);" onclick="printPageArea('printableArea')">Print</a>
+    <a class="printB btn btn-success" href="javascript:void(0);" onclick="printPageArea('printableArea')">Print</a>
 
     <h2>{{ trans('general.general_info') }}</h2>
     {{-- <h3>{{ trans('general.assigned_to', ['name' => $show_user->present()->fullName()]) }} {{

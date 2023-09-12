@@ -908,7 +908,6 @@
                         {{ (Storage::exists('private_uploads/users/'.$file->filename)) ?
                         Helper::formatFilesizeUnits(Storage::size('private_uploads/users/'.$file->filename)) : '' }}
                       </td>
-
                       <td>
                         @if ($file->note)
                         {{ $file->note }}
